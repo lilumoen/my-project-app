@@ -1,13 +1,21 @@
-function citySearch(event) {
-  event.preventDefault();
-  let searchInput = document.querySelector("#city-input");
-  let h1 = document.querySelector("h1");
-  h1.innerHTML = `${searchInput.value}`;
+function displayTemperature(response) {
+  let temperatureElement = document.querySelector("#current-temperature");
+  let temperature = Math.round(response.data.temperature.current);
+  let cityElement = document.querySelector("#current-city");
+  let currentCity = response.data.city;
+  cityElement.innerHTML = currentCity;
+  temperatureElement.innerHTML = temperature;
 }
+function search(event) {
+  event.preventDefault();
+  let searchInputElement = document.querySelector("#search-input");
+  let city = searchInputElement.value;
 
-let form = document.querySelector("#form-input");
-form.addEventListener("submit", citySearch);
+  let key = "0a6beb1694at793a1bo3bfae1d478daa";
+  let apiUrl = `https://api.shecodes.io/weather/v1/current?query=${city}&key=${key}&units=metric`;
 
+  axios.get(apiUrl).then(displayTemperature);
+}
 function formatDate(date) {
   let minutes = date.getMinutes();
   let hours = date.getHours();
@@ -35,7 +43,10 @@ function formatDate(date) {
   return `${formattedDay} ${hours}:${minutes}`;
 }
 
-let currentDateELement = document.querySelector("#current-time");
+let searchForm = document.querySelector("#search-form");
+searchForm.addEventListener("submit", search);
+
+let currentDateELement = document.querySelector("#current-date");
 let currentDate = new Date();
 
 currentDateELement.innerHTML = formatDate(currentDate);
